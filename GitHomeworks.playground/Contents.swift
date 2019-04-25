@@ -1,104 +1,110 @@
 import UIKit
 import Foundation
 
-print("1. Самостоятельно повторить проделанное в уроке")
-print("2. Добавить студенту property «Дата рождения» (пусть это будет еще одна структура, содержащая день, месяц, год) и два computed property: первое — вычисляющее его возраст, второе — вычисляющее, сколько лет он учился (считать, что он учился в школе с 6 лет, если студенту меньше 6 лет — возвращать 0)")
+print("1. Создать структуру “Описание файла” содержащую свойства:")
+//    - путь к файлу
+//    - имя файла
+//    - максимальный размер файла на диске
+//    - путь к папке, содержащей этот файл
+//    - тип файла (скрытый или нет)
+//    - содержимое файла (можно просто симулировать контент)
+//
+//    Главная задача - это использовать правильные свойства там, где нужно, чтобы не пришлось хранить одни и те же данные в разных местах и т.д. и т.п.
 
-struct DateOfBirth {
-    var day: Int
-    var month: Int
-    var year: Int
-    var age: Int {
-        get {
-            return 2019 - year
-        }
+struct FileDescription {
+    enum FileType {
+        case hidden
+        case open
     }
-    var teaching: Int {
-        get {
-            if age <= 6 {
-                return 0
-            } else {
-                return age - 6
-                
+    static var maxSize = 50
+    var filePath: String
+    var fileName: String
+    var size: Int {
+        didSet {
+            if size > FileDescription.maxSize {
+                size = oldValue
             }
         }
     }
+    var pathToTheFolder: String
+    var fileType: FileType
+    lazy var content = "Контент файла"
 }
 
-struct Student {
-    var firstName: String {
-        willSet(newFirstName) {
-            print(newFirstName + " замінить " + firstName)
-            
-        } didSet(oldFirstName) {
-            print(firstName + " замінило " + oldFirstName)
-            firstName.capitalized
-        }
-    }
-    var lastName: String
-    var fullName: String {
-        get {  return firstName + " " + lastName
-        }
-        set {
-           print("fullName хоче змінити на" + newValue)
-            let words = newValue.components(separatedBy: " ")
-            
-            if words.count > 0 {
-            firstName = words[0]
-            }
-            if words.count > 1 {
-            lastName = words[1]
-            }
-        }
-    }
-    var dateOfBirth: DateOfBirth
-}
+print("2. Создайте энум, который будет представлять некую цветовую гамму. Этот энум должен быть типа Int и как raw значение должен иметь соответствующее 3 байтное представление цвета. Добавьте в этот энум 3 свойства типа: количество цветов в гамме, начальный цвет и конечный цвет.")
 
-var student = Student(firstName: "Lilia", lastName: "Chmola", dateOfBirth: DateOfBirth(day: 28, month: 12, year: 1995))
+enum ColorScheme: Int {
+    static var numberOfColors = 6
+    static var initialColor = ColorScheme.white
+    static var finalColor = ColorScheme.yellow
     
-student.dateOfBirth.teaching
-
-
-print("3. Создать структуру «Отрезок», содержащую две внутренние структуры «Точки». Структуру «Точка» создать самостоятельно, несмотря на уже имеющуюся в Swift’е. Таким образом, структура «Отрезок» содержит две структуры «Точки» — точки A и B (stored properties). Добавить два computed properties: « середина отрезка» и «длина» (считать математическими функциями)")
-print("4. При изменении середины отрезка должно меняться положение точек A и B. При изменении длины, меняется положение точки B")
-
-struct Point {
-    var x: Double
-    var y: Double
+    case white = 0xFFFFFF
+    case blue = 0x0000FF
+    case red = 0xFF0000
+    case green = 0x00FF00
+    case gray = 0x808080
+    case yellow = 0xFFFF00
 }
 
-struct Offcut {
-    var a: Point
-    var b: Point
-    var length: Double {
-        get {
-          return (a.x + b.x) - 1
-        }
-        set {
-            print("\(newValue), \(length)")
-            newValue
-        }
+print("3. Создайте класс человек, который будет содержать имя, фамилию, возраст, рост и вес. Добавьте несколько свойств непосредственно этому классу чтобы контролировать:")
+//    - минимальный и максимальный возраст каждого объекта
+//    - минимальную и максимальную длину имени и фамилии
+//    - минимально возможный рост и вес
+//    - самое интересное, создайте свойство, которое будет содержать количество созданных объектов этого класса
 
+class People {
+    static let maxAge = 100
+    static let minAge = 1
+    static let maxHeight = 215
+    static let minHeight = 40
+    static let maxWeight = 250
+    static let minWeight = 2
+    static var totalPeople = 0
+    
+    var firstName: String {
+        didSet {
+            if firstName.count > 15 {
+                firstName = oldValue
+            }
+        }
     }
-
-    var middle: Point {
-        get {
-            let x = (a.x + b.x) / 2
-            let y = (a.y + b.y) / 2
-            return Point(x: x, y: y)
+    var lastName: String {
+        didSet {
+            if lastName.count > 20 {
+                lastName = oldValue
+            }
         }
-        set {
-            print("\(newValue), \(middle)")
-          // Point(x: newValue.x , y: newValue.y)
-            length = newValue.x * 2
+    }
+    var age: Int {
+        didSet {
+            if age > People.maxAge || age < People.minAge {
+                age = oldValue
         }
     }
 }
-
-var ab = Offcut(a: Point(x: 1, y: 1), b: Point(x: 10, y: 1))
-
-ab.middle = Point(x: 2, y: 3)
-ab.length
-
-
+    var height: Int {
+        didSet {
+            if height > People.maxHeight || height < People.minAge {
+                height = oldValue
+        }
+    }
+}
+    var weight: Int {
+        didSet {
+            if weight > People.maxWeight || weight < People.minWeight {
+                weight = oldValue
+            }
+        }
+    }
+    
+    init(firstName: String, lastName: String, age: Int, height: Int, weight: Int ) {
+        self.firstName = firstName
+        self.lastName = lastName
+        self.age = age
+        self.height = height
+        self.weight = weight
+        
+        People.totalPeople += 1
+    }
+}
 
