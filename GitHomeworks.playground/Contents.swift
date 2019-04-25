@@ -1,103 +1,104 @@
 import UIKit
+import Foundation
 
-print("//1. Создайте структуру студент. Добавьте свойства: имя, фамилия, год рождения, средний бал. Создайте несколько экземпляров этой структуры и заполните их данными. Положите их всех в массив (журнал).")
+print("1. Самостоятельно повторить проделанное в уроке")
+print("2. Добавить студенту property «Дата рождения» (пусть это будет еще одна структура, содержащая день, месяц, год) и два computed property: первое — вычисляющее его возраст, второе — вычисляющее, сколько лет он учился (считать, что он учился в школе с 6 лет, если студенту меньше 6 лет — возвращать 0)")
 
-struct StudentStruct {
-    var name: String
+struct DateOfBirth {
+    var day: Int
+    var month: Int
+    var year: Int
+    var age: Int {
+        get {
+            return 2019 - year
+        }
+    }
+    var teaching: Int {
+        get {
+            if age <= 6 {
+                return 0
+            } else {
+                return age - 6
+                
+            }
+        }
+    }
+}
+
+struct Student {
+    var firstName: String {
+        willSet(newFirstName) {
+            print(newFirstName + " замінить " + firstName)
+            
+        } didSet(oldFirstName) {
+            print(firstName + " замінило " + oldFirstName)
+            firstName.capitalized
+        }
+    }
     var lastName: String
-    var dateOfBirth: String
-    var GPA: Double
-}
-
-var Karina = StudentStruct(name: "Karina", lastName: "Karinina", dateOfBirth: "20.01.1999", GPA: 4.2)
-var Katia = StudentStruct(name: "Katia", lastName: "Volodina", dateOfBirth: "8.10.1994", GPA: 5.0)
-var Igor = StudentStruct(name: "Igor", lastName: "Karinin", dateOfBirth: "20.01.1989", GPA: 3.6)
-var Artur = StudentStruct(name: "Artur", lastName: "Pirozhkov", dateOfBirth: "7.09.1995", GPA: 3.9)
-var Ira = StudentStruct(name: "Ira", lastName: "Solona", dateOfBirth: "29.01.1979", GPA: 4.7)
-var Anna = StudentStruct(name: "Anna", lastName: "Karinina", dateOfBirth: "23.10.1999", GPA: 3.1)
-
-var studentsStrArray = [Karina, Katia, Igor, Artur, Ira, Anna]
-
-print("//2. Напишите функцию, которая принимает массив студентов и выводит в консоль данные каждого. Перед выводом каждого студента добавляйте порядковый номер в “журнале”, начиная с 1.")
-
-func printoutStudent(array: [StudentStruct]) {
-    var index = 1
-        for i in array {
-            print("Порядковий номер студента: \(index)")
-            print("Прізвище, ім'я: \(i.lastName), \(i.name)")
-            print("Дата народження: \(i.dateOfBirth)")
-            print("Середній бал: \(i.GPA)")
-            index += 1
+    var fullName: String {
+        get {  return firstName + " " + lastName
+        }
+        set {
+           print("fullName хоче змінити на" + newValue)
+            let words = newValue.components(separatedBy: " ")
+            
+            if words.count > 0 {
+            firstName = words[0]
+            }
+            if words.count > 1 {
+            lastName = words[1]
+            }
+        }
     }
-}
-printoutStudent(array: studentsStrArray)
-
-print("3. С помощью функции sorted отсортируйте массив по среднему баллу, по убыванию и распечатайте “журнал”.")
-
-let sortedGPAArray = studentsStrArray.sorted { (i, i2) -> Bool in
-    i.GPA > i2.GPA
-}
-for i in sortedGPAArray {
-    print("Середній бал \(i.lastName) \(i.name) - \(i.GPA)")
+    var dateOfBirth: DateOfBirth
 }
 
-print("4. Отсортируйте теперь массив по фамилии (по возрастанию), причем если фамилии одинаковые, а вы сделайте так чтобы такое произошло, то сравниваются по имени. Распечатайте “журнал”.")
-
-let sortedLNArray = studentsStrArray.sorted { (i, i2) -> Bool in
-
-    if i.lastName == i2.lastName {
-        return i.name.first! < i2.name.first!
-    } else {
-        return  i.lastName < i2.lastName
-    }
-}
-
-for i in sortedLNArray {
-    print(i.lastName + " " + i.name)
-}
-
-print("5. Создайте переменную и присвойте ей ваш существующий массив. Измените в нем данные всех студентов. Изменится ли первый массив? Распечатайте оба массива.")
-
-var changeArray = studentsStrArray
-changeArray[0] = StudentStruct(name: "lol", lastName: "ololol", dateOfBirth: "23.23.23", GPA: 23)
-changeArray[1] = StudentStruct(name: "lol", lastName: "ololol", dateOfBirth: "23.23.23", GPA: 23)
-changeArray[2] = StudentStruct(name: "lol", lastName: "ololol", dateOfBirth: "23.23.23", GPA: 23)
-
-changeArray
-studentsStrArray
-
-
-print("6. Теперь проделайте все тоже самое, но не для структуры Студент, а для класса. Какой результат в 5м задании? Что изменилось и почему?")
-
-class StudentClass {
-    let name: String
-    let lastName: String
-    let dateOfBirth: String
-    let GPA: Double
+var student = Student(firstName: "Lilia", lastName: "Chmola", dateOfBirth: DateOfBirth(day: 28, month: 12, year: 1995))
     
-    init(name: String, lastName: String, dateOfBirth: String, GPA: Double) {
-        self.name = name
-        self.lastName = lastName
-        self.dateOfBirth = dateOfBirth
-        self.GPA = GPA
+student.dateOfBirth.teaching
+
+
+print("3. Создать структуру «Отрезок», содержащую две внутренние структуры «Точки». Структуру «Точка» создать самостоятельно, несмотря на уже имеющуюся в Swift’е. Таким образом, структура «Отрезок» содержит две структуры «Точки» — точки A и B (stored properties). Добавить два computed properties: « середина отрезка» и «длина» (считать математическими функциями)")
+print("4. При изменении середины отрезка должно меняться положение точек A и B. При изменении длины, меняется положение точки B")
+
+struct Point {
+    var x: Double
+    var y: Double
+}
+
+struct Offcut {
+    var a: Point
+    var b: Point
+    var length: Double {
+        get {
+          return (a.x + b.x) - 1
+        }
+        set {
+            print("\(newValue), \(length)")
+            newValue
+        }
+
+    }
+
+    var middle: Point {
+        get {
+            let x = (a.x + b.x) / 2
+            let y = (a.y + b.y) / 2
+            return Point(x: x, y: y)
+        }
+        set {
+            print("\(newValue), \(middle)")
+          // Point(x: newValue.x , y: newValue.y)
+            length = newValue.x * 2
+        }
     }
 }
 
-var c1 = StudentClass(name: "Karina", lastName: "Karinina", dateOfBirth: "20.01.1999", GPA: 4.2)
-let c2 = StudentClass(name: "Katia", lastName: "Volodina", dateOfBirth: "8.10.1994", GPA: 5.0)
-let c3 = StudentClass(name: "Igor", lastName: "Karinin", dateOfBirth: "20.01.1989", GPA: 3.6)
-let c4 = StudentClass(name: "Artur", lastName: "Pirozhkov", dateOfBirth: "7.09.1995", GPA: 3.9)
-let c5 = StudentClass(name: "Ira", lastName: "Solona", dateOfBirth: "29.01.1979", GPA: 4.7)
-let c6 = StudentClass(name: "Anna", lastName: "Karinina", dateOfBirth: "23.10.1999", GPA: 3.1)
+var ab = Offcut(a: Point(x: 1, y: 1), b: Point(x: 10, y: 1))
 
-var studentClassArray = [c1, c2, c3, c4, c5, c6]
-var testArray = studentClassArray
+ab.middle = Point(x: 2, y: 3)
+ab.length
 
-c1 = StudentClass(name: "lolo", lastName: "lolo", dateOfBirth: "lolo", GPA: 3)
 
-studentClassArray
-testArray
 
-//007. Уровень супермен
-
-//Выполните задание шахмат из урока по энумам используя структуры либо классы
