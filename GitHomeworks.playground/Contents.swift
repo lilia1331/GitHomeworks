@@ -1,110 +1,73 @@
 import UIKit
 import Foundation
 
-print("1. Создать структуру “Описание файла” содержащую свойства:")
-//    - путь к файлу
-//    - имя файла
-//    - максимальный размер файла на диске
-//    - путь к папке, содержащей этот файл
-//    - тип файла (скрытый или нет)
-//    - содержимое файла (можно просто симулировать контент)
-//
-//    Главная задача - это использовать правильные свойства там, где нужно, чтобы не пришлось хранить одни и те же данные в разных местах и т.д. и т.п.
+print("1. Создайте тип Комната. У комнаты есть размеры W на H. И создайте тип Персонаж. У негоесть координата в комнате X и Y. Реализуйте функцию, которая красивенько текстом будет показывать положение персонажа в комнате")
 
-struct FileDescription {
-    enum FileType {
-        case hidden
-        case open
-    }
-    static var maxSize = 50
-    var filePath: String
-    var fileName: String
-    var size: Int {
-        didSet {
-            if size > FileDescription.maxSize {
-                size = oldValue
-            }
-        }
-    }
-    var pathToTheFolder: String
-    var fileType: FileType
-    lazy var content = "Контент файла"
+struct Room {
+    var height: Int
+    var width: Int
 }
 
-print("2. Создайте энум, который будет представлять некую цветовую гамму. Этот энум должен быть типа Int и как raw значение должен иметь соответствующее 3 байтное представление цвета. Добавьте в этот энум 3 свойства типа: количество цветов в гамме, начальный цвет и конечный цвет.")
+print("2. Персонажу добавьте метод идти, который принимает энумчик лево, право, верх, вниз.Этот метод должен передвигать персонажа. Реализуйте правило что персонаж не должен покинуть пределы комнаты. Подвигайте персонажа и покажите это графически")
 
-enum ColorScheme: Int {
-    static var numberOfColors = 6
-    static var initialColor = ColorScheme.white
-    static var finalColor = ColorScheme.yellow
-    
-    case white = 0xFFFFFF
-    case blue = 0x0000FF
-    case red = 0xFF0000
-    case green = 0x00FF00
-    case gray = 0x808080
-    case yellow = 0xFFFF00
-}
 
-print("3. Создайте класс человек, который будет содержать имя, фамилию, возраст, рост и вес. Добавьте несколько свойств непосредственно этому классу чтобы контролировать:")
-//    - минимальный и максимальный возраст каждого объекта
-//    - минимальную и максимальную длину имени и фамилии
-//    - минимально возможный рост и вес
-//    - самое интересное, создайте свойство, которое будет содержать количество созданных объектов этого класса
-
-class People {
-    static let maxAge = 100
-    static let minAge = 1
-    static let maxHeight = 215
-    static let minHeight = 40
-    static let maxWeight = 250
-    static let minWeight = 2
-    static var totalPeople = 0
-    
-    var firstName: String {
-        didSet {
-            if firstName.count > 15 {
-                firstName = oldValue
-            }
-        }
+struct Cat {
+  var  x: Int
+  var  y: Int
+   
+    enum Move {
+        case up
+        case down
+        case right
+        case left
     }
-    var lastName: String {
-        didSet {
-            if lastName.count > 20 {
-                lastName = oldValue
-            }
-        }
-    }
-    var age: Int {
-        didSet {
-            if age > People.maxAge || age < People.minAge {
-                age = oldValue
+
+  mutating  func move(At m: Move) {
+        switch m {
+        case .up:
+            self.y += 1
+        case .right:
+            self.x += 1
+        case .down:
+            self.y -= 1
+        case .left:
+            self.x -= 1
+        default:
+            print("yps")
         }
     }
 }
-    var height: Int {
-        didSet {
-            if height > People.maxHeight || height < People.minAge {
-                height = oldValue
-        }
-    }
+
+
+func replace(myString: String, _ index: Int, _ newChar: Character) -> String {
+    var chars = Array(myString.characters)     // gets an array of characters
+    chars[index] = newChar
+    let modifiedString = String(chars)
+    return modifiedString
 }
-    var weight: Int {
-        didSet {
-            if weight > People.maxWeight || weight < People.minWeight {
-                weight = oldValue
-            }
-        }
+
+ func printout(cat: Cat, In room: Room){
+    var floor = ""
+    for _ in 1...room.width {
+        floor += "\u{1F532}"
     }
-    
-    init(firstName: String, lastName: String, age: Int, height: Int, weight: Int ) {
-        self.firstName = firstName
-        self.lastName = lastName
-        self.age = age
-        self.height = height
-        self.weight = weight
+    for i in 1...room.height {
+        if cat.x == i {
+            print(replace(myString: floor, i - 1, "\u{1F408}"))
+        } else {
+            print(floor)
+        }
         
-        People.totalPeople += 1
     }
 }
+
+var c = Cat(x: 3, y: 6)
+var r = Room(height: 8, width: 10)
+
+printout(cat: c, In: r)
+print("\(c.x) and \(c.y)")
+c.move(At: .right)
+print("\n\n\n")
+print("\(c.x) and \(c.y)")
+printout(cat: c, In: r)
 
